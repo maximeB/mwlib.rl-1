@@ -529,7 +529,7 @@ class RlWriter(object):
             if linuxmem:
                 log.info('memory usage after laying out:', linuxmem.memory())
             self.doc.build(elements)
-            if pdfstyles.render_toc and self.numarticles > 1:
+            if pdfstyles.render_toc:# and self.numarticles > 1:
                 err = self.toc_renderer.build(output, self.toc_entries, has_title_page=bool(self.book.title), rtl=self.rtl)
                 if err:
                     log.warning('TOC not rendered. Probably pdftk is not properly installed. returncode: %r' % err)
@@ -649,13 +649,15 @@ class RlWriter(object):
             heading_txt = ''
         self.formatter.sectiontitle_mode = False
 
-        if 1 <= lvl <= 4 and self.inline_mode == 0 and self.table_nesting==0:
+        if 1 <= lvl <= 6 and self.inline_mode == 0 and self.table_nesting==0:
             anchor = '<a name="%d"/>' % len(self.bookmarks)
             bm_type = 'article' if lvl==1 else 'heading%s' % lvl
             self.bookmarks.append((obj.children[0].getAllDisplayText(), bm_type))
         else:
             anchor = ''
         elements = [Paragraph('<font name="%s"><b>%s</b></font>%s' % (headingStyle.fontName, heading_txt, anchor), headingStyle)]
+        #This is to add the sections, sub-sections ... in the table of content.
+        elements.append(TocEntry(txt=str(heading_txt), lvl=bm_type))
 
         if self.table_size_calc == 0:
             obj.removeChild(obj.children[0])

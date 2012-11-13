@@ -74,7 +74,6 @@ class TocRenderer(object):
         else:
             cmd.extend(['-f', '%s' % pdfpath, '-f', '%s' % tocpath, '-f', '%s' % pdfpath, '-u', '1-1:all:2-:'])
         cmd.extend(['-o', '%s' % finalpath, '-overwrite', 'concat'])
-        print(cmd)
         try:
             retcode = subprocess.call(cmd)
         except OSError:

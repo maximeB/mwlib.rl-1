@@ -179,6 +179,8 @@ class PPDocTemplate(BaseDocTemplate):
                     'heading2': 2,
                     'heading3': 3,
                     'heading4': 4,
+                    'heading5': 5,#new
+                    'heading6': 6,
                     }
         got_chapter = False
         last_lvl =  0

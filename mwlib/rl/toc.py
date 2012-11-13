@@ -68,16 +68,13 @@ class TocRenderer(object):
 
     def combinePdfs(self, pdfpath, tocpath, finalpath, has_title_page):
 
-        cmd =  ['pdftk',
-                'A=%s' % pdfpath,
-                'B=%s' % tocpath,
-                ]        
+        cmd = ['pdfsam-console']
         if not has_title_page:
-            cmd.extend(['cat', 'B', 'A'])
+            cmd.extend(['-f', '%s' % tocpath, '-f', '%s' % pdfpath])
         else:
-            cmd.extend(['cat', 'A1', 'B', 'A2-end'])
-        cmd.extend(['output','%s' % finalpath])
-
+            cmd.extend(['-f', '%s' % pdfpath, '-f', '%s' % tocpath, '-f', '%s' % pdfpath, '-u', '1-1:all:2-:'])
+        cmd.extend(['-o', '%s' % finalpath, '-overwrite', 'concat'])
+        print(cmd)
         try:
             retcode = subprocess.call(cmd)
         except OSError:

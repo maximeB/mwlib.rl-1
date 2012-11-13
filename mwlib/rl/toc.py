@@ -50,6 +50,21 @@ class TocRenderer(object):
         for row_idx, (lvl, txt, page_num) in enumerate(toc_entries):
             if lvl == 'article':
                 page_num = str(page_num)
+            elif lvl == 'heading2':
+                page_num = str(page_num)
+                lvl = 2
+            if lvl == 'heading3':
+                page_num = str(page_num)
+                lvl = 3
+            if lvl == 'heading4':
+                page_num = str(page_num)
+                lvl = 4
+            if lvl == 'heading5':
+                page_num = str(page_num)
+                lvl = 5
+            if lvl == 'heading6':
+                page_num = str(page_num)
+                lvl = 6
             elif lvl == 'chapter':
                 page_num = '<b>%d</b>' % page_num
                 styles.append(('TOPPADDING', (0, row_idx), (-1, row_idx), 10))

@@ -289,9 +289,44 @@ def text_style(mode='p', indent_lvl=0, in_table=0, relsize='normal', text_align=
         style.leading = 18
         
     if mode == 'toc_article':
-        style.fontSize = 10
+        style.fontSize = 12
         style.leading = 12
-        style.leftIndent = para_left_indent
+        style.leftIndent = 0
+
+    if mode == 'toc_2':
+        style.fontSize = 11
+        style.leftIndent = 10
+        style.leading = 0
+        style.spaceAfter = 0
+        style.spaceBefore = 0
+    
+    if mode == 'toc_3':
+        style.fontSize = 11
+        style.leftIndent = 20
+        style.leading = 0
+        style.spaceAfter = 0
+        style.spaceBefore = 0
+    
+    if mode == 'toc_4':
+        style.fontSize = 11
+        style.leftIndent = 30
+        style.leading = 0
+        style.spaceAfter = 0
+        style.spaceBefore = 0
+
+    if mode == 'toc_5':
+        style.fontSize = 11
+        style.leftIndent = 40
+        style.leading = 0
+        style.spaceAfter = 0
+        style.spaceBefore = 0
+
+    if mode == 'toc_6':
+        style.fontSize = 11
+        style.leftIndent = 50
+        style.leading = 0
+        style.spaceAfter = 0
+        style.spaceBefore = 0
 
     return style
 

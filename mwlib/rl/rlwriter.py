@@ -247,6 +247,8 @@ class RlWriter(object):
         self.tmpdir = tempfile.mkdtemp()
         self.bookmarks = []
         self.colwidth = 0
+        
+        self.tocId=6*[0]
 
         self.articleids = []
         self.layout_status = None
@@ -640,6 +642,12 @@ class RlWriter(object):
             headingStyle = heading_style("license")
         else:
             headingStyle = heading_style('section', lvl=lvl+1)
+            self.tocId[lvl]+=1
+
+            for t in range(len(self.tocId)):
+                if t > lvl:
+                    self.tocId[t]=0
+
         if not obj.children:
             return ''
         self.formatter.sectiontitle_mode = True
@@ -655,6 +663,12 @@ class RlWriter(object):
             self.bookmarks.append((obj.children[0].getAllDisplayText(), bm_type))
         else:
             anchor = ''
+        
+        tocTemp = filter( lambda x:x!=0, self.tocId )
+        valu='.'.join(map(str,tocTemp))
+
+        heading_txt = valu +' '+heading_txt
+        
         elements = [Paragraph('<font name="%s"><b>%s</b></font>%s' % (headingStyle.fontName, heading_txt, anchor), headingStyle)]
         #This is to add the sections, sub-sections ... in the table of content.
         elements.append(TocEntry(txt=str(heading_txt), lvl=bm_type))

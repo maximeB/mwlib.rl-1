@@ -642,12 +642,12 @@ class RlWriter(object):
             headingStyle = heading_style("license")
         else:
             headingStyle = heading_style('section', lvl=lvl+1)
-            self.tocId[lvl]+=1
+            self.tocId[lvl-1]+=1
 
             for t in range(len(self.tocId)):
-                if t > lvl:
+                if t >= lvl:
                     self.tocId[t]=0
-
+        
         if not obj.children:
             return ''
         self.formatter.sectiontitle_mode = True
@@ -781,6 +781,10 @@ class RlWriter(object):
         title = self.renderArticleTitle(article.caption)
 
         log.info('rendering: %r' % (article.url or article.caption))
+        # New article, reset the tocId
+        for t in range(len(self.tocId)):
+            self.tocId[t]=0
+        
         if self.layout_status:
             self.layout_status(article=article.caption)
             self.articlecount += 1

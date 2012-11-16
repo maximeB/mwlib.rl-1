@@ -81,18 +81,38 @@ class TocRenderer(object):
         elements.append(t)
         doc.build(elements)
 
-    def combinePdfs(self, pdfpath, tocpath, finalpath, has_title_page):
-
-        cmd = ['pdfsam-console']
-        if not has_title_page:
-            cmd.extend(['-f', '%s' % tocpath, '-f', '%s' % pdfpath])
-        else:
-            cmd.extend(['-f', '%s' % pdfpath, '-f', '%s' % tocpath, '-f', '%s' % pdfpath, '-u', '1-1:all:2-:'])
-        cmd.extend(['-o', '%s' % finalpath, '-overwrite', 'concat'])
+    def run_cmd(self, cmd):
         try:
-            retcode = subprocess.call(cmd)
+            retcode = subprocess.call(cmd, stdout=subprocess.PIPE)
         except OSError:
             retcode = 1
+        return retcode
+
+    def pdftk(self, pdfpath, tocpath, finalpath, has_title_page):
+        cmd =  ['pdftk',
+                'A=%s' % pdfpath,
+                'B=%s' % tocpath,
+                ]
+        if not has_title_page:
+            cmd.extend(['cat', 'B', 'A'])
+        else:
+            cmd.extend(['cat', 'A1', 'B', 'A2-end'])
+        cmd.extend(['output', finalpath])
+        return self.run_cmd(cmd)
+
+    def pdfsam(self, pdfpath, tocpath, finalpath, has_title_page):
+        cmd = ['pdfsam-console']
+        if not has_title_page:
+            cmd.extend(['-f', tocpath, '-f', pdfpath])
+        else:
+            cmd.extend(['-f', pdfpath, '-f', tocpath, '-f', pdfpath, '-u', '1-1:all:2-:'])
+        cmd.extend(['-o', finalpath, '-overwrite', 'concat'])
+        return self.run_cmd(cmd)
+
+    def combinePdfs(self, pdfpath, tocpath, finalpath, has_title_page):
+        retcode = self.pdfsam(pdfpath, tocpath, finalpath, has_title_page=has_title_page)
+        if retcode != 0:
+            retcode = self.pdftk(pdfpath, tocpath, finalpath, has_title_page=has_title_page)
         if retcode == 0:
             shutil.move(finalpath, pdfpath)
         if os.path.exists(tocpath):
